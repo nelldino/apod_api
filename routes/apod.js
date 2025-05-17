@@ -29,6 +29,18 @@ const pictureRouter = (app, fs) => {
             res.send(apod);
         });
     });
+    //READ by liked pictures
+    app.get('/apod/liked', (req, res) => {
+        fs.readFile(dataPath, 'utf8', (err, data) => {
+            if (err) {
+                res.status(500).send('Error reading file');
+                return;
+            }
+            const apods = JSON.parse(data);
+            const likedApods = apods.filter(a => a.liked === true);
+            res.send(likedApods);
+        });
+    });
 
     // CREATE
     app.post('/apod', (req, res) => {
@@ -73,7 +85,55 @@ const pictureRouter = (app, fs) => {
         });
     });
 });
+ 
+    //UPDATE - like by date
+    app.put('/apod/like/:date', (req, res) => {
+        fs.readFile(dataPath, 'utf8', (err, data) => {
+            if (err) {
+                res.status(500).send('Error reading file');
+                return;
+            }
+            let apods = JSON.parse(data);
+            const apodIndex = apods.findIndex(a => a.date === req.params.date);
+            if (apodIndex === -1) {
+                res.status(404).send('APOD not found');
+                return;
+            }
+            apods[apodIndex].liked = !apods[apodIndex].liked;
+            fs.writeFile(dataPath, JSON.stringify(apods, null, 2), err => {
+                if (err) {
+                    res.status(500).send('Error writing file');
+                    return;
+                }
+                res.send(apods[apodIndex]);
+            });
+        });
+    });
 
+    //UPDATE - unlike by date
+    app.put('/apod/unlike/:date', (req, res) => {
+        fs.readFile(dataPath, 'utf8', (err, data) => {
+            if (err) {
+                res.status(500).send('Error reading file');
+                return;
+            }
+            let apods = JSON.parse(data);
+            const apodIndex = apods.findIndex(a => a.date === req.params.date);
+            if (apodIndex === -1) {
+                res.status(404).send('APOD not found');
+                return;
+            }
+            apods[apodIndex].liked = false;
+            fs.writeFile(dataPath, JSON.stringify(apods, null, 2), err => {
+                if (err) {
+                    res.status(500).send('Error writing file');
+                    return;
+                }
+                res.send(apods[apodIndex]);
+            });
+        });
+    });
+    
     // DELETE by date
     app.delete('/apod/date/:date', (req, res) => {
     fs.readFile(dataPath, 'utf8', (err, data) => {
