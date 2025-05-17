@@ -2,6 +2,21 @@ const pictureRouter = (app, fs) => {
 
     const dataPath = './data/apod.json';
 
+    /**
+    * @swagger
+    * /apod:
+    *   get:
+    *     summary: Get all APOD entries
+    *     responses:
+    *       200:
+    *         description: List of APOD entries
+    *         content:
+    *           application/json:
+    *             schema:
+    *               type: array
+    *               items:
+    *                 type: object
+    */
     // READ all
     app.get('/apod', (req, res) => {
         fs.readFile(dataPath, 'utf8', (err, data) => {
@@ -13,6 +28,25 @@ const pictureRouter = (app, fs) => {
         });
     });
 
+    /**
+     * @swagger
+     * /apod/date/{date}:
+     *   get:
+     *     summary: Get APOD by date
+     *     tags: [APOD]
+     *     parameters:
+     *       - in: path
+     *         name: date
+     *         schema:
+     *           type: string
+     *         required: true
+     *         description: Date of the APOD entry
+     *     responses:
+     *       200:
+     *         description: APOD found
+     *       404:
+     *         description: APOD not found
+     */
     // READ by date
     app.get('/apod/date/:date', (req, res) => {
         fs.readFile(dataPath, 'utf8', (err, data) => {
@@ -29,6 +63,18 @@ const pictureRouter = (app, fs) => {
             res.send(apod);
         });
     });
+
+    /**
+     * @swagger
+     * /apod/liked:
+     *   get:
+     *     summary: Get all liked APODs
+     *     tags: [APOD]
+     *     responses:
+     *       200:
+     *         description: List of liked APODs
+     */
+
     //READ by liked pictures
     app.get('/apod/liked', (req, res) => {
         fs.readFile(dataPath, 'utf8', (err, data) => {
@@ -42,6 +88,24 @@ const pictureRouter = (app, fs) => {
         });
     });
 
+    /**
+     * @swagger
+     * /apod:
+     *   post:
+     *     summary: Create a new APOD entry
+     *     tags: [APOD]
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *     responses:
+     *       201:
+     *         description: APOD created
+     *       500:
+     *         description: Error writing file
+     */
     // CREATE
     app.post('/apod', (req, res) => {
         fs.readFile(dataPath, 'utf8', (err, data) => {
@@ -61,6 +125,32 @@ const pictureRouter = (app, fs) => {
             });
         });
     });
+
+    /**
+     * @swagger
+     * /apod/date/{date}:
+     *   put:
+     *     summary: Update an APOD entry by date
+     *     tags: [APOD]
+     *     parameters:
+     *       - in: path
+     *         name: date
+     *         schema:
+     *           type: string
+     *         required: true
+     *         description: Date of the APOD entry
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *     responses:
+     *       200:
+     *         description: APOD updated
+     *       404:
+     *         description: APOD not found
+     */
 
     // UPDATE by date
     app.put('/apod/date/:date', (req, res) => {
@@ -86,6 +176,26 @@ const pictureRouter = (app, fs) => {
     });
 });
  
+     /**
+     * @swagger
+     * /apod/like/{date}:
+     *   put:
+     *     summary: Toggle like for an APOD by date
+     *     tags: [APOD]
+     *     parameters:
+     *       - in: path
+     *         name: date
+     *         schema:
+     *           type: string
+     *         required: true
+     *         description: Date of the APOD entry
+     *     responses:
+     *       200:
+     *         description: APOD like toggled
+     *       404:
+     *         description: APOD not found
+     */
+
     //UPDATE - like by date
     app.put('/apod/like/:date', (req, res) => {
         fs.readFile(dataPath, 'utf8', (err, data) => {
@@ -110,6 +220,25 @@ const pictureRouter = (app, fs) => {
         });
     });
 
+     /**
+     * @swagger
+     * /apod/unlike/{date}:
+     *   put:
+     *     summary: Unlike an APOD entry by date
+     *     tags: [APOD]
+     *     parameters:
+     *       - in: path
+     *         name: date
+     *         schema:
+     *           type: string
+     *         required: true
+     *         description: Date of the APOD entry
+     *     responses:
+     *       200:
+     *         description: APOD unliked
+     *       404:
+     *         description: APOD not found
+     */
     //UPDATE - unlike by date
     app.put('/apod/unlike/:date', (req, res) => {
         fs.readFile(dataPath, 'utf8', (err, data) => {
@@ -133,7 +262,26 @@ const pictureRouter = (app, fs) => {
             });
         });
     });
-    
+
+    /**
+     * @swagger
+     * /apod/date/{date}:
+     *   delete:
+     *     summary: Delete an APOD entry by date
+     *     tags: [APOD]
+     *     parameters:
+     *       - in: path
+     *         name: date
+     *         schema:
+     *           type: string
+     *         required: true
+     *         description: Date of the APOD entry
+     *     responses:
+     *       200:
+     *         description: APOD deleted
+     *       404:
+     *         description: APOD not found
+     */
     // DELETE by date
     app.delete('/apod/date/:date', (req, res) => {
     fs.readFile(dataPath, 'utf8', (err, data) => {
