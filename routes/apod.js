@@ -13,6 +13,23 @@ const pictureRouter = (app, fs) => {
         });
     });
 
+    // READ by date
+    app.get('/apod/date/:date', (req, res) => {
+        fs.readFile(dataPath, 'utf8', (err, data) => {
+            if (err) {
+                res.status(500).send('Error reading file');
+                return;
+            }
+            const apods = JSON.parse(data);
+            const apod = apods.find(a => a.date === req.params.date);
+            if (!apod) {
+                res.status(404).send('APOD not found');
+                return;
+            }
+            res.send(apod);
+        });
+    });
+
     // CREATE
     app.post('/apod', (req, res) => {
         fs.readFile(dataPath, 'utf8', (err, data) => {
@@ -33,7 +50,7 @@ const pictureRouter = (app, fs) => {
         });
     });
 
-    // UPDATE
+    // UPDATE by date
     app.put('/apod/date/:date', (req, res) => {
     fs.readFile(dataPath, 'utf8', (err, data) => {
         if (err) {
