@@ -1,4 +1,3 @@
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const swaggerUi = require('swagger-ui-express');
@@ -24,7 +23,7 @@ const swaggerOptions = {
             },
         ],
     },
-    apis: ['./routes/*.js'],
+    apis: ['./server.js','./routes/*.js'],
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
@@ -33,6 +32,43 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+/**
+ * @swagger
+ * /login:
+ *   post:
+ *     summary: Login and receive a JWT token
+ *     tags:
+ *       - Authentication
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - role
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 example: admin
+ *               role:
+ *                 type: string
+ *                 enum: [admin, user]
+ *                 example: admin
+ *     responses:
+ *       200:
+ *         description: Successful login with token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *       400:
+ *         description: Missing username or role
+ */
 app.post('/login', (req, res) => {
     const { username, role } = req.body;
     if (!username || !role) return res.status(400).json({ message: 'Username and role required' });
