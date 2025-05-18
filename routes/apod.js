@@ -285,7 +285,7 @@ const pictureRouter = (app, fs) => {
      *         description: APOD not found
      */
     // DELETE by date
-    app.delete('/apod/date/:date', (req, res) => {
+    app.delete('/apod/date/:date', authenticateToken, authorizeRole('admin'), (req, res) => {
     fs.readFile(dataPath, 'utf8', (err, data) => {
         if (err) {
             res.status(500).send('Error reading file');
