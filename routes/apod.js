@@ -20,7 +20,7 @@ const pictureRouter = (app, fs) => {
     */
 
     // READ all
-    app.get('/apod', (req, res) => {
+    app.get('/apod', authenticateToken, (req, res) => {
         fs.readFile(dataPath, 'utf8', (err, data) => {
             if (err) {
                 res.status(500).send('Error reading file');

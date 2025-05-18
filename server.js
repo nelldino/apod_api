@@ -32,11 +32,12 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.post('/login', (req, res) => {
-    const { username } = req.body;
-    if (!username) return res.status(400).json({ message: 'Username required' });
 
-    const user = { username, role: 'admin' }; 
+app.post('/login', (req, res) => {
+    const { username, role } = req.body;
+    if (!username || !role) return res.status(400).json({ message: 'Username and role required' });
+
+    const user = { username, role };
 
     const token = jwt.sign(
         { username: user.username, role: user.role },
@@ -45,6 +46,7 @@ app.post('/login', (req, res) => {
     );
     res.json({ token });
 });
+
 
 require('./routes/routes.js')(app, fs, authenticateToken);
 
