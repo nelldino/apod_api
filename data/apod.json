@@ -5,7 +5,7 @@
     "url": "https://apod.nasa.gov/apod/image/2505/Crab_Webb_998.jpg",
     "media_type": "image",
     "explanation": "Cataloged as M1, the Crab Nebula is the first on Charles Messier's famous list of things which are not comets.",
-    "liked": false
+    "liked": true
   },
   {
     "date": "2025-05-07",
@@ -22,7 +22,7 @@
     "url": "https://youtu.be/rQcKIN9vj3U",
     "media_type": "video",
     "explanation": "If one black hole looks strange, what about two? Light rays from accretion disks around a pair of orbiting supermassive black holes make their way through the warped space-time produced by extreme gravity in this detailed computer visualization. ",
-    "liked": true
+    "liked": false
   },
   {
     "date": "2025-05-05",
