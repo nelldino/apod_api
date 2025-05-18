@@ -2,6 +2,7 @@ const pictureRouter = (app, fs) => {
 
     const dataPath = './data/apod.json';
 
+    const { authenticateToken, authorizeRole } = require('./middlewares/auth.js');
     /**
     * @swagger
     * /apod:
@@ -17,8 +18,9 @@ const pictureRouter = (app, fs) => {
     *               items:
     *                 type: object
     */
+
     // READ all
-    app.get('/apod', (req, res) => {
+    app.get('/apod', authenticateToken, (req, res) => {
         fs.readFile(dataPath, 'utf8', (err, data) => {
             if (err) {
                 res.status(500).send('Error reading file');
@@ -48,7 +50,7 @@ const pictureRouter = (app, fs) => {
      *         description: APOD not found
      */
     // READ by date
-    app.get('/apod/date/:date', (req, res) => {
+    app.get('/apod/date/:date',authenticateToken, (req, res) => {
         fs.readFile(dataPath, 'utf8', (err, data) => {
             if (err) {
                 res.status(500).send('Error reading file');
@@ -76,7 +78,7 @@ const pictureRouter = (app, fs) => {
      */
 
     //READ by liked pictures
-    app.get('/apod/liked', (req, res) => {
+    app.get('/apod/liked', authenticateToken,(req, res) => {
         fs.readFile(dataPath, 'utf8', (err, data) => {
             if (err) {
                 res.status(500).send('Error reading file');
@@ -107,7 +109,7 @@ const pictureRouter = (app, fs) => {
      *         description: Error writing file
      */
     // CREATE
-    app.post('/apod', (req, res) => {
+    app.post('/apod', authenticateToken, authorizeRole('admin'), (req, res) => {
         fs.readFile(dataPath, 'utf8', (err, data) => {
             if (err) {
                 res.status(500).send('Error reading file');
@@ -153,7 +155,7 @@ const pictureRouter = (app, fs) => {
      */
 
     // UPDATE by date
-    app.put('/apod/date/:date', (req, res) => {
+    app.put('/apod/date/:date', authenticateToken, authorizeRole('admin'), (req, res) => {
     fs.readFile(dataPath, 'utf8', (err, data) => {
         if (err) {
             res.status(500).send('Error reading file');
@@ -197,7 +199,7 @@ const pictureRouter = (app, fs) => {
      */
 
     //UPDATE - like by date
-    app.put('/apod/like/:date', (req, res) => {
+    app.put('/apod/like/:date',  authenticateToken, authorizeRole('admin'),(req, res) => {
         fs.readFile(dataPath, 'utf8', (err, data) => {
             if (err) {
                 res.status(500).send('Error reading file');
@@ -240,7 +242,7 @@ const pictureRouter = (app, fs) => {
      *         description: APOD not found
      */
     //UPDATE - unlike by date
-    app.put('/apod/unlike/:date', (req, res) => {
+    app.put('/apod/unlike/:date',  authenticateToken, authorizeRole('admin'),(req, res) => {
         fs.readFile(dataPath, 'utf8', (err, data) => {
             if (err) {
                 res.status(500).send('Error reading file');
@@ -283,7 +285,7 @@ const pictureRouter = (app, fs) => {
      *         description: APOD not found
      */
     // DELETE by date
-    app.delete('/apod/date/:date', (req, res) => {
+    app.delete('/apod/date/:date', authenticateToken, authorizeRole('admin'), (req, res) => {
     fs.readFile(dataPath, 'utf8', (err, data) => {
         if (err) {
             res.status(500).send('Error reading file');
