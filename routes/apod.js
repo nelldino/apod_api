@@ -2,6 +2,7 @@ const pictureRouter = (app, fs) => {
 
     const dataPath = './data/apod.json';
 
+    const { authenticateToken, authorizeRole } = require('./middlewares/auth.js');
     /**
     * @swagger
     * /apod:
@@ -17,6 +18,7 @@ const pictureRouter = (app, fs) => {
     *               items:
     *                 type: object
     */
+
     // READ all
     app.get('/apod', (req, res) => {
         fs.readFile(dataPath, 'utf8', (err, data) => {
@@ -107,7 +109,7 @@ const pictureRouter = (app, fs) => {
      *         description: Error writing file
      */
     // CREATE
-    app.post('/apod', (req, res) => {
+    app.post('/apod', authenticateToken, authorizeRole('admin'), (req, res) => {
         fs.readFile(dataPath, 'utf8', (err, data) => {
             if (err) {
                 res.status(500).send('Error reading file');
