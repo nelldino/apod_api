@@ -10,21 +10,36 @@ const app = express();
 const port = 3000;
 
 const swaggerOptions = {
-    swaggerDefinition: {
-        openapi: '3.0.0',
-        info: {
-            title: 'APOD API',
-            version: '1.0.0',
-            description: 'API for Astronomy Picture of the Day (APOD)',
-        },
-        servers: [
-            {
-                url: 'http://localhost:3000',
-            },
-        ],
+  swaggerDefinition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'APOD API',
+      version: '1.0.0',
+      description: 'API for Astronomy Picture of the Day (APOD)',
     },
-    apis: ['./server.js','./routes/*.js'],
+    servers: [
+      {
+        url: 'http://localhost:3000',
+      },
+    ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
+  },
+  apis: ['./server.js', './routes/*.js'],
 };
+
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
